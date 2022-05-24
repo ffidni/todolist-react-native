@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Button} from 'react-native';
 
 export default function Header(props) {
-    console.log(props.editable);
   return (
     <View style={styles.header}>
         <Text style={styles.title}>Todolist</Text>
@@ -9,7 +8,7 @@ export default function Header(props) {
             props.editable &&
             <View style={styles.btnContainer}>
                 <Button title="Edit"/>
-                <Button title="Delete"/>
+                <Button title="Delete" onPress={props.deleteTodo}/>
             </View>
         }
     </View>
@@ -18,14 +17,16 @@ export default function Header(props) {
 
 const styles = StyleSheet.create({
     header: {
-        height: "10%",
-        paddingTop: 38,
+        paddingTop: 35,
+        paddingBottom: 15,
         backgroundColor: 'coral',
         flexDirection: "row",
         justifyContent: "space-around",
     },
     btnContainer: {
         flexDirection: "row",
+        justifyContent: "space-evenly",
+        width: "35%",
     },
     title: {
         textAlign: "center",
