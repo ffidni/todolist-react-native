@@ -1,10 +1,8 @@
-import { setStatusBarNetworkActivityIndicatorVisible, StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, Text, View, FlatList, Button, StatusBar, TouchableWithoutFeedback, TextInput, Keyboard} from 'react-native';
+import React, {useState, useRef} from 'react';
 import Header from './components/Header';
 import { Touchable } from 'react-native-web';
 import Todo from './components/Todo';
-import Dialog from './components/Dialog';
 import {v4 as uuidv4} from 'uuid';
 
 
@@ -14,10 +12,12 @@ export default function App() {
         {text: 'backflip', key: uuidv4()},
     ]);
     const [selected, setSelected] = useState(false);
-    const [dialog, showDialog] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [formValue, setForm] = useState("");
 
 
-    const selectHandler = (key) => {
+    const selectHandler = (key = false) => {
+        setEdit(false);
         setSelected(key);
     }
     const deleteTodo = () => {
@@ -50,15 +50,20 @@ export default function App() {
         });
     }
 
+    const resetState = () => {
+        setSelected(false);
+        setEdit(false);
+        Keyboard.dismiss();
+    }
+
 
   return (
-      <>
-        {
-            selected || dialog &&
-            <Dialog title={selected ? "Edit Todo" : "Add Todo"} onSave={selected ? onSave : null} key={selected ?  selected : null} addTodo={!selected ? addTodo : null} showDialog={showDialog}/>
-        }
+        <TouchableWithoutFeedback
+            onPress={resetState}
+        >
         <View style={styles.container}>
-            <Header editable={selected} deleteTodo={selected ? deleteTodo : undefined}/>
+            <StatusBar backgroundColor="#ff6a34"/>
+            <Header editable={selected} deleteTodo={selected ? deleteTodo : undefined} editTodo={() => setEdit(true)} close={() => selectHandler(false)}/>
             <View style={styles.content}>
                 <View style={styles.list}>
                     <FlatList
@@ -68,18 +73,39 @@ export default function App() {
                         )}
                     />
                 </View>
-                <View style={styles.btnContainer}>
-                    <Button color="coral" title="Add Todo" onPress={() => {
-                            if (selected) {
-                                setSelected(false);
+
+                <View style={styles.form}>
+                <View style={styles.horLine}></View>
+
+                    <TextInput
+                        placeholder='e.g. sleep'
+                        style={styles.input}
+                        value={formValue}
+                        onChangeText={(val) => setForm(val)}
+                    />
+                    <View style={styles.btnContainer}>
+                        <Button color="coral" title={edit ? "Edit Todo" :  "Add Todo"} onPress={() => {
+                                if (edit) {
+                                    onSave(selected, formValue)
+                                } else {
+                                    if (selected) {
+                                        setSelected(false);
+                                    }
+                                    if (formValue !== ""){
+                                        addTodo(formValue);
+                                    }
+                                }
+                                setForm("");
+
+
                             }
-                            showDialog(true);
-                        }
-                    }/>
+                        }/>
+                    </View>
                 </View>
             </View>
         </View>
-      </>
+        </TouchableWithoutFeedback>
+
 
   );
 }
@@ -100,4 +126,23 @@ const styles = StyleSheet.create({
   btnContainer: {
     marginTop: 10,
   },
+  form: {
+  },
+  horLine: {
+      width: "100%",
+      height: "5%",
+      borderWidth: 2,
+      borderTopColor: "#eaeaea",
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      marginTop: 10,
+      marginBottom: 10,
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    borderWidth: 1.5,
+    borderColor: "grey",
+    backgroundColor: "#eaeaea",
+    height: 45,
+},
 });

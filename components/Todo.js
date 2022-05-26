@@ -1,12 +1,12 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, Pressable} from 'react-native';
 
 
 export default function Todo({item, selectHandler, selected}) {
   return (
-    <TouchableOpacity onPress={() => selectHandler(item.key)} style={[styles.item, selected === item.key && styles.itemSelected]}>
+    <Pressable onLongPress={selected ? () => {} : () => selectHandler(item.key)} onPress={!selected ? () => {} : () => selectHandler(item.key)} style={[styles.item, selected === item.key && styles.itemSelected]}>
         <Text>{item.text}</Text>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

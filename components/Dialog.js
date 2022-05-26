@@ -1,49 +1,54 @@
 import React, {useRef} from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Button, TextInput} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Button, TextInput, Modal} from 'react-native';
 
 
-export default function Dialog({title, key, saveTodo, addTodo, showDialog}) {
+export default function Dialog({title, id, saveTodo, addTodo, showDialog, visibility}) {
     const titleRef = useRef();
   return (
-      <>
-        <TouchableOpacity style={styles.dialogContainer} onPress={() => showDialog(false)}></TouchableOpacity>
-        <View style={styles.dialog}>
-            <View style={styles.exit}>
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={visibility}
+                style={styles.centeredView}
+                onRequestClose={() => showDialog(false)}
+            >
+            <View style={[styles.dialog]}>
+                <View style={styles.exit}>
                         <Button color="coral" title="Exit" style={styles.exit} onPress={() => showDialog(false)}/>
-            </View>
-                <View style={styles.header}>
-                    <Text style={styles.title}>{title}</Text>
+                </View>
+                    <View style={styles.header}>
+                        <Text style={styles.title}>{title}</Text>
 
-                </View>
-                <View style={styles.form}>
-                    <View style={styles.row}>
-                        <Text style={styles.todoTitle}>Todo's Title</Text>
-                        <TextInput 
-                            placeholder='e.g. sleep'
-                            style={styles.input}
-                            ref={titleRef}
-                        />
                     </View>
+                    <View style={styles.form}>
+                        <View style={styles.row}>
+                            <Text style={styles.todoTitle}>Todo's Title</Text>
+                            <TextInput 
+                                placeholder='e.g. sleep'
+                                style={styles.input}
+                                ref={titleRef}
+                            />
+                        </View>
+                    </View>
+                    <Button color="coral" title="Save" onPress={() => addTodo ? addTodo(titleRef.current.value) : saveTodo(id, titleRef.current.value)}/>
                 </View>
-                <Button color="coral" title="Save" onPress={() => addTodo ? addTodo(titleRef.current.value) : saveTodo(key, titleRef.current.value)}/>
+            </Modal>
         </View>
-      </>
+
 
   )
 }
 
+
 const styles = StyleSheet.create({
-    dialogContainer: {
-        position: "absolute",
-        zIndex: 2,
-        display: "flex",
+    centeredView: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        top: 0,
-        left: 0,
+        backgroundColor: "red",
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     title: {
         fontSize: 20,
@@ -53,10 +58,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     dialog: {
-        position: "absolute",
-        left: "11%",
-        top: "30%",
-        zIndex: 3,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-around",

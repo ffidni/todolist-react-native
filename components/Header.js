@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Button} from 'react-native';
+import React from 'react';
 
 export default function Header(props) {
   return (
@@ -7,8 +8,9 @@ export default function Header(props) {
         {
             props.editable &&
             <View style={styles.btnContainer}>
-                <Button title="Edit"/>
-                <Button title="Delete" onPress={props.deleteTodo}/>
+                <Button color="#ff6a34" title="Edit" onPress={props.editTodo}/>
+                <Button color="#ff6a34" title="Delete" onPress={props.deleteTodo}/>
+                <Button color="#ff6a34" title="Close" onPress={props.close}/>
             </View>
         }
     </View>
@@ -26,7 +28,7 @@ const styles = StyleSheet.create({
     btnContainer: {
         flexDirection: "row",
         justifyContent: "space-evenly",
-        width: "35%",
+        width: "50%",
     },
     title: {
         textAlign: "center",
