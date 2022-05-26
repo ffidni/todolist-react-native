@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View,  TouchableOpacity, Button} from 'react-native';
 import React from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Header(props) {
   return (
@@ -8,9 +9,9 @@ export default function Header(props) {
         {
             props.editable &&
             <View style={styles.btnContainer}>
-                <Button color="#ff6a34" title="Edit" onPress={props.editTodo}/>
-                <Button color="#ff6a34" title="Delete" onPress={props.deleteTodo}/>
-                <Button color="#ff6a34" title="Close" onPress={props.close}/>
+                <MaterialIcons size={25} color="#333" name="edit" onPress={props.editTodo}/>
+                <MaterialIcons size={25} color="#333" name="delete" onPress={props.deleteTodo}/>
+                <MaterialIcons size={25} color="#333" name="close" onPress={props.close}/>
             </View>
         }
     </View>
@@ -23,16 +24,16 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         backgroundColor: 'coral',
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
     },
     btnContainer: {
         flexDirection: "row",
         justifyContent: "space-evenly",
-        width: "50%",
+        width: "40%",
     },
     title: {
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: "bold",
         color: "white",
 

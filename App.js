@@ -4,12 +4,17 @@ import Header from './components/Header';
 import { Touchable } from 'react-native-web';
 import Todo from './components/Todo';
 import {v4 as uuidv4} from 'uuid';
+import SandBox from './components/SandBox';
 
 
 export default function App() {
     const [todos, setTodos] = useState([
         {text: 'turu', key: uuidv4()},
         {text: 'backflip', key: uuidv4()},
+        {text: 'backflip', key: uuidv4()},
+        {text: 'backflip', key: uuidv4()},
+        {text: 'backflip', key: uuidv4()},
+
     ]);
     const [selected, setSelected] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -19,6 +24,7 @@ export default function App() {
     const selectHandler = (key = false) => {
         setEdit(false);
         setSelected(key);
+        setForm("");
     }
     const deleteTodo = () => {
         setTodos((prevTodos) => {
@@ -26,6 +32,12 @@ export default function App() {
             newTodos = newTodos.filter((todo) => todo.key !== selected);
             return newTodos;
         });
+    }
+
+    const onEdit = () => {
+        let title = todos.find((todo) => todo.key === selected).text;
+        setEdit(true);
+        setForm(title);
     }
 
     const onSave = (key, title) => {
@@ -58,25 +70,22 @@ export default function App() {
 
 
   return (
+        //<SandBox/>
         <TouchableWithoutFeedback
             onPress={resetState}
         >
         <View style={styles.container}>
             <StatusBar backgroundColor="#ff6a34"/>
-            <Header editable={selected} deleteTodo={selected ? deleteTodo : undefined} editTodo={() => setEdit(true)} close={() => selectHandler(false)}/>
+
+            <Header 
+            editable={selected} 
+            deleteTodo={selected ? deleteTodo : undefined} 
+            editTodo={onEdit} 
+            close={() => selectHandler(false)}
+            />
+
             <View style={styles.content}>
-                <View style={styles.list}>
-                    <FlatList
-                        data={todos}
-                        renderItem={({item}) => (
-                            <Todo item={item} selectHandler={selectHandler} selected={selected}/>
-                        )}
-                    />
-                </View>
-
-                <View style={styles.form}>
-                <View style={styles.horLine}></View>
-
+            <View style={styles.form}>
                     <TextInput
                         placeholder='e.g. sleep'
                         style={styles.input}
@@ -102,11 +111,18 @@ export default function App() {
                         }/>
                     </View>
                 </View>
+                <View style={styles.horLine}></View>
+                <View style={styles.list}>
+                    <FlatList
+                        data={todos}
+                        renderItem={({item}) => (
+                            <Todo item={item} selectHandler={selectHandler} selected={selected}/>
+                        )}
+                    />
+                </View>
             </View>
         </View>
         </TouchableWithoutFeedback>
-
-
   );
 }
 
@@ -114,14 +130,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-
   },
   content: {
+      flex: 1,
     height: "90%",
     margin: 20,
-
   },   
   list: {
+      flex: 1,
   },
   btnContainer: {
     marginTop: 10,
@@ -130,12 +146,11 @@ const styles = StyleSheet.create({
   },
   horLine: {
       width: "100%",
-      height: "5%",
       borderWidth: 2,
       borderTopColor: "#eaeaea",
       borderBottomWidth: StyleSheet.hairlineWidth,
-      marginTop: 10,
-      marginBottom: 10,
+      marginTop: 15,
+      marginBottom: 15,
   },
   input: {
     width: "100%",
